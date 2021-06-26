@@ -44,9 +44,11 @@
 					!nombre.trim() ||
 					!email.trim()
 				"
+				v-if="!loading"
 			>
 				Crear cuenta
 			</button>
+			<LoadingBtn v-else />
 			<router-link to="/login" class="btn btn-outline-dark">
 				¿Ya tienes cuenta?
 			</router-link>
@@ -66,18 +68,23 @@
 <script>
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+
+import LoadingBtn from "../components/LoadingBtn.vue";
 export default {
+	components: { LoadingBtn },
 	setup() {
 		const email = ref("");
 		const nombre = ref("");
 		const password = ref("");
 		const repitePassword = ref("");
+		const loading = ref(false);
 
 		const store = useStore();
 
 		const errors = computed(() => store.state.moduleAuth.errors);
 
 		const procesarFormulario = async () => {
+			loading.value = true;
 			await store.dispatch("moduleAuth/acceder", {
 				path: "signup",
 				form: {
@@ -86,6 +93,7 @@ export default {
 					nombre: nombre.value,
 				},
 			});
+			loading.value = false;
 		};
 
 		return {
@@ -95,6 +103,7 @@ export default {
 			repitePassword,
 			procesarFormulario,
 			errors,
+			loading,
 		};
 	},
 };

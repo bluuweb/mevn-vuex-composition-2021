@@ -40,7 +40,7 @@ router.beforeEach(async(to, _, next) => {
 
     store.commit('moduleAuth/setErrors', null)
 
-    console.log('desde router')
+    // console.log('desde router')
 
     if(!rutaProtegida) return next()
 
